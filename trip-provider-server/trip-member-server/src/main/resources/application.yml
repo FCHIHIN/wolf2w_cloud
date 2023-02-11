@@ -18,3 +18,5 @@ mybatis-plus:
   configuration:
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
 
+sms:
+  appkey: 49eed8e99cd9b3fdbaf8474cff47d2c6
