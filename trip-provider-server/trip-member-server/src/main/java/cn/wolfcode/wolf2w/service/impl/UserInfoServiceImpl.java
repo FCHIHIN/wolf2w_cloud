@@ -8,12 +8,20 @@ import cn.wolfcode.wolf2w.common.util.Consts;
 import cn.wolfcode.wolf2w.domain.UserInfo;
 import cn.wolfcode.wolf2w.mapper.UserInfoMapper;
 import cn.wolfcode.wolf2w.service.IUserInfoService;
+import com.alibaba.fastjson2.JSON;
+import com.alibaba.fastjson2.JSONObject;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
+
+import javax.imageio.plugins.tiff.TIFFField;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
@@ -98,6 +106,94 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         userInfo.setState(UserInfo.STATE_NORMAL);
 
         super.save(userInfo);
+    }
+
+    @Override
+    public Map<String, Object> login(String username, String password) {
+        // 判空参数
+        AssertUtil.hasText(username,"账号能为空");
+        AssertUtil.hasText(password,"密码不能为空");
+        // 判断账号不存在
+        QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("phone",username);
+        UserInfo user1 = userInfoMapper.selectOne(wrapper);
+        if(user1 == null) {
+            throw new LogicException("账号不存在");
+        }
+
+        // 去数据库查user
+        QueryWrapper<UserInfo> wrapper1 = new QueryWrapper<>();
+        wrapper1.eq("phone",username);
+        wrapper1.eq("password",password);
+        UserInfo user = userInfoMapper.selectOne(wrapper1);
+        // 判断用户状态
+
+        // 5分钟1判断
+        if (redisService.hasKey("freezetime")){
+            UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+            updateWrapper.eq("phone",username);
+            updateWrapper.set("state",UserInfo.STATE_NORMAL);
+            userInfoMapper.update(null,wrapper);
+        }
+
+        // 当用户登录失败次数超过5次，暂时冻结5分钟，5分钟之后可以重新登录
+        if (user == null) {
+            Long times = redisService.incrementCacheObjectValue("username");
+            if (times == 5) {
+                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("phone",username);
+                updateWrapper.set("state",UserInfo.STATE_DISABLE);
+                userInfoMapper.update(null,wrapper);
+                // 存5分钟冻结时间
+                redisService.setCacheObject("freezetime",1,RedisKeys.VERIFY_CODE.getTime(),TimeUnit.SECONDS);
+                throw new LogicException("用户登录失败次数超过5次，暂时冻结5分钟，5分钟之后可以重新登录");
+                //当用户又登录失败5次(10次), 永久冻结
+            } else if (times == 10) {
+                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
+                updateWrapper.eq("phone",username);
+                updateWrapper.set("state",UserInfo.STATE_DISABLE);
+                userInfoMapper.update(null,wrapper);
+                redisService.deleteObject("username");
+                throw new LogicException("账号永久冻结");
+            }
+            else {
+                throw new LogicException("账号或密码错误");
+            }
+        }
+
+
+
+
+        // 拼接key
+        String token = UUID.randomUUID().toString().replaceAll("-","");
+        String key = RedisKeys.USER_LOGIN_TOKEN.join(token);
+        // value(用Json)
+        String value = JSON.toJSONString(user);
+        // 缓存redis
+        redisService.setCacheObject(key,value,RedisKeys.USER_LOGIN_TOKEN.getTime(),TimeUnit.SECONDS);
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("token",token);
+        map.put("user",user);
+        return map;
+    }
+
+    @Override
+    public UserInfo queryByToken(String token) {
+        // 判空
+        AssertUtil.hasText(token,"参数异常");
+        // 拼接key
+        String key = RedisKeys.USER_LOGIN_TOKEN.join(token);
+        // 看看有没有key
+        if (redisService.hasKey(key)) {
+            // 拿出user
+            String strUser = redisService.getCacheObject(key);
+            UserInfo user = JSON.parseObject(strUser,UserInfo.class);
+            // 重置时间
+            redisService.expire(key,RedisKeys.USER_LOGIN_TOKEN.getTime(),TimeUnit.SECONDS);
+            return user;
+        }
+        return null;
+
     }
 
 

@@ -320,4 +320,12 @@ public class RedisService {
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
     }
+
+    /**
+     * @param key
+     */
+
+    public Long incrementCacheObjectValue(final String key){
+        return redisTemplate.opsForValue().increment(key);
+    }
 }

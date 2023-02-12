@@ -13,13 +13,9 @@
 </head>
 <body>
 <script>
-    $(function () {
-
-        ajaxGet("article", "/test2", {a:1, b:2, c:3, d:4}, function (data) {
-            console.log(data);
-        })
-
-    })
+   ajaxGet("member","/userInfos/currentUser",{},function (data) {
+       console.log(data);
+   })
 </script>
 </body>
 </html>
