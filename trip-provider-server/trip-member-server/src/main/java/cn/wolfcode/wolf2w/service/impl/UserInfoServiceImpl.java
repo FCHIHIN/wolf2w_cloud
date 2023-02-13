@@ -10,7 +10,9 @@ import cn.wolfcode.wolf2w.mapper.UserInfoMapper;
 import cn.wolfcode.wolf2w.service.IUserInfoService;
 import com.alibaba.fastjson2.JSON;
 import com.alibaba.fastjson2.JSONObject;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -116,65 +118,63 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         // 判断账号不存在
         QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
         wrapper.eq("phone",username);
-        UserInfo user1 = userInfoMapper.selectOne(wrapper);
-        if(user1 == null) {
+        UserInfo user = userInfoMapper.selectOne(wrapper);
+        if(user == null) {
             throw new LogicException("账号不存在");
+        } else if (user.getState() != UserInfo.STATE_NORMAL) {
+            throw new LogicException("账号冻结状态");
+        }
+        // 拼接冻结缓存
+        else {
+            redisService.setnxCacheObject(RedisKeys.FORZEN_PHONE.join(username),0L);
         }
 
         // 去数据库查user
-        QueryWrapper<UserInfo> wrapper1 = new QueryWrapper<>();
-        wrapper1.eq("phone",username);
-        wrapper1.eq("password",password);
-        UserInfo user = userInfoMapper.selectOne(wrapper1);
-        // 判断用户状态
-
-        // 5分钟1判断
-        if (redisService.hasKey("freezetime")){
-            UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
-            updateWrapper.eq("phone",username);
-            updateWrapper.set("state",UserInfo.STATE_NORMAL);
-            userInfoMapper.update(null,wrapper);
+        LambdaQueryWrapper<UserInfo> lambdaQueryWrapper = new LambdaQueryWrapper<>();
+        lambdaQueryWrapper.eq(UserInfo::getPhone,username);
+        lambdaQueryWrapper.eq(UserInfo::getPassword,password);
+        UserInfo userInfo = userInfoMapper.selectOne(lambdaQueryWrapper);
+        // 错误次数 + 1
+        String key = RedisKeys.FORZEN_PHONE.join(username);
+        String fiveMinKey = RedisKeys.FORZEN_TIME.join(username);
+        // 次数
+        Integer times = new Integer(String.valueOf(redisService.getKey(key)));
+        System.out.println(times);
+        // 判断
+        if (userInfo == null) {
+        redisService.incrTimes(key,1L);
+        if (times == 5) {
+            redisService.setnxCacheObject(fiveMinKey,0,RedisKeys.FORZEN_TIME.getTime(),TimeUnit.SECONDS);
+            updateState(username, UserInfo.STATE_DISABLE);
+            throw new LogicException("登录失败次数超过5次，暂时冻结5分钟，5分钟之后可以重新登录");
+        } else if (times == 10) {
+            updateState(username, UserInfo.STATE_DISABLE);
+            redisService.delKey(key);
+            throw new LogicException("登录失败次数过多，永久冻结");
+        } else if ( !redisService.hasKey(fiveMinKey) & redisService.hasKey(key)){
+            updateState(username, UserInfo.STATE_NORMAL);
         }
-
-        // 当用户登录失败次数超过5次，暂时冻结5分钟，5分钟之后可以重新登录
-        if (user == null) {
-            Long times = redisService.incrementCacheObjectValue("username");
-            if (times == 5) {
-                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("phone",username);
-                updateWrapper.set("state",UserInfo.STATE_DISABLE);
-                userInfoMapper.update(null,wrapper);
-                // 存5分钟冻结时间
-                redisService.setCacheObject("freezetime",1,RedisKeys.VERIFY_CODE.getTime(),TimeUnit.SECONDS);
-                throw new LogicException("用户登录失败次数超过5次，暂时冻结5分钟，5分钟之后可以重新登录");
-                //当用户又登录失败5次(10次), 永久冻结
-            } else if (times == 10) {
-                UpdateWrapper<UserInfo> updateWrapper = new UpdateWrapper<>();
-                updateWrapper.eq("phone",username);
-                updateWrapper.set("state",UserInfo.STATE_DISABLE);
-                userInfoMapper.update(null,wrapper);
-                redisService.deleteObject("username");
-                throw new LogicException("账号永久冻结");
-            }
-            else {
-                throw new LogicException("账号或密码错误");
-            }
-        }
-
-
-
+        throw new LogicException("密码错误");
+    }
 
         // 拼接key
         String token = UUID.randomUUID().toString().replaceAll("-","");
-        String key = RedisKeys.USER_LOGIN_TOKEN.join(token);
+        String keys = RedisKeys.USER_LOGIN_TOKEN.join(token);
         // value(用Json)
         String value = JSON.toJSONString(user);
         // 缓存redis
-        redisService.setCacheObject(key,value,RedisKeys.USER_LOGIN_TOKEN.getTime(),TimeUnit.SECONDS);
+        redisService.setCacheObject(keys,value,RedisKeys.USER_LOGIN_TOKEN.getTime(),TimeUnit.SECONDS);
         HashMap<String, Object> map = new HashMap<>();
         map.put("token",token);
         map.put("user",user);
         return map;
+    }
+
+    public void updateState(String username, int stateDisable) {
+        LambdaUpdateWrapper<UserInfo> lambdaUpdateWrapper = new LambdaUpdateWrapper<>();
+        lambdaUpdateWrapper.set(UserInfo::getState, stateDisable);
+        lambdaUpdateWrapper.eq(UserInfo::getPhone, username);
+        super.update(lambdaUpdateWrapper);
     }
 
     @Override
@@ -195,6 +195,5 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         return null;
 
     }
-
 
 }
