@@ -331,4 +331,8 @@ public class RedisService {
     public void delKey(String key) {
         stringRedisTemplate.delete(key);
     }
+
+    public Long incrKey(String key) {
+        return redisTemplate.opsForValue().increment(key,1);
+    }
 }

@@ -12,4 +12,48 @@
     <artifactId>trip-article-server</artifactId>
 
 
+    <dependencies>
+        <dependency>
+            <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.wolfcode</groupId>
+            <artifactId>trip-article-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>cn.wolfcode</groupId>
+            <artifactId>trip-member-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <artifactId>trip-common</artifactId>
+            <groupId>cn.wolfcode</groupId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.aliyun.oss</groupId>
+            <artifactId>aliyun-sdk-oss</artifactId>
+            <version>3.5.0</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.6</version>
+        </dependency>
+
+
+    </dependencies>
+
+
 </project>

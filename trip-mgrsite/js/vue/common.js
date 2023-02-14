@@ -11,8 +11,8 @@ var serverUrlMap = {
 }
 
 function getServiceUrl(service){
-    //return serverUrlMap[service]
-    return serverUrlMap["gateway"] + "/" + service
+    return serverUrlMap[service]
+    // return serverUrlMap["gateway"] + "/" + service
 }
 
 

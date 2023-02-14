@@ -1,12 +1,11 @@
-package cn.wolfcode.wolf2w.common.web.config;
+package cn.wolfcode.wolf2w.article.config;
 
 import cn.wolfcode.wolf2w.common.security.interceptor.CheckLoginInterceptor;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.baomidou.mybatisplus.annotation.DbType;
+import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
+import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -14,21 +13,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
+
+    //分页拦截器
     @Bean
-    public CheckLoginInterceptor checkLoginInterceptor() {
-        return new CheckLoginInterceptor();
-    };
-
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(checkLoginInterceptor())
-                .addPathPatterns("/**")
-                .excludePathPatterns("/userInfos/checkPhone")
-                .excludePathPatterns("/userInfos/sendVerifyCode")
-                .excludePathPatterns("/userInfos/regist")
-                .excludePathPatterns("/userInfos/login");
+    public MybatisPlusInterceptor mybatisPlusInterceptor() {
+        MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
+        PaginationInnerInterceptor paginationInnerInterceptor = new PaginationInnerInterceptor(DbType.MYSQL);
+        paginationInnerInterceptor.setOverflow(true); //合理化
+        interceptor.addInnerInterceptor(paginationInnerInterceptor);
+        return interceptor;
     }
-
     //跨域访问
     @Bean
     public WebMvcConfigurer corsConfigurer() {
