@@ -3,6 +3,7 @@ package cn.wolfcode.wolf2w.article.controller;
 import cn.wolfcode.wolf2w.article.domain.StrategyCatalog;
 import cn.wolfcode.wolf2w.article.query.StrategyCatalogQuery;
 import cn.wolfcode.wolf2w.article.service.IStrategyCatalogService;
+import cn.wolfcode.wolf2w.article.vo.CatalogVO;
 import cn.wolfcode.wolf2w.common.web.response.JsonResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.baomidou.mybatisplus.core.metadata.IPage;
@@ -55,6 +56,12 @@ public class StrategyCatalogController {
     public JsonResult delete(@PathVariable Long id){
         strategyCatalogService.removeById(id);
         return  JsonResult.success();
+    }
+
+    @GetMapping("/groups")
+    public JsonResult queryCatalogGroup(Long id){
+        List<CatalogVO> list = strategyCatalogService.queryCatalogGroup();
+        return JsonResult.success(list);
     }
 
 }

@@ -70,6 +70,7 @@ var vue = new Vue({
                     vue.strategy = data.data;
                     vue.content = data.data.content;
                     vue.imgFile.setImage(data.data.coverUrl)
+                    vue.ck.setData(data.data.content.content)
                 })
                 clearInterval(timer)
             }, 200);

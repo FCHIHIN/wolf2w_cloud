@@ -2,8 +2,6 @@ package cn.wolfcode.wolf2w.common.redis.util;
 
 import cn.wolfcode.wolf2w.common.util.Consts;
 import lombok.Getter;
-import lombok.Setter;
-import org.apache.tomcat.util.bcel.Const;
 
 /**
  * Rediskey 的管理类
@@ -21,11 +19,7 @@ public enum RedisKeys {
     //用户登录的缓存 key  实例对象
     USER_LOGIN_TOKEN("user_login_token", Consts.USER_INFO_TOKEN_VAI_TIME * 60L),
     //注册短信验证码缓存 key  实例对象
-    VERIFY_CODE("verify_code", Consts.VERIFY_CODE_VAI_TIME * 60L),
-    // 冻结缓存次数
-    FORZEN_PHONE("forzen_phone",-1L),
-    // 五分钟冻结
-    FORZEN_TIME("forzen_time",Consts.VERIFY_CODE_VAI_TIME * 60L);
+    VERIFY_CODE("verify_code", Consts.VERIFY_CODE_VAI_TIME * 60L);
 
     private Long time;      //redis key 的有效时间，单位s
     private String prefix;  //redis key 前缀

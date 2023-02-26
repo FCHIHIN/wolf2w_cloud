@@ -11,4 +11,9 @@ import lombok.Setter;
 @Setter
 @Getter
 public class StrategyQuery extends  QueryObject{
+    private Long destId;
+    private Long themId;
+    private Integer type;
+    private Long refid;
+    private String orderBy;
 }

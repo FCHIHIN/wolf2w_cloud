@@ -38,4 +38,8 @@ public interface IDestinationService extends IService<Destination> {
      * @return
      */
     List<Destination> queryByRidSon(Long rid);
+
+    Destination queryByName(String name);
+
+    Destination detail(Long id);
 }

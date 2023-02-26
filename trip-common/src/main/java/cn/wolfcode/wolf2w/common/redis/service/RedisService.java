@@ -1,7 +1,10 @@
 package cn.wolfcode.wolf2w.common.redis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.*;
+import org.springframework.data.redis.core.BoundSetOperations;
+import org.springframework.data.redis.core.HashOperations;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -12,8 +15,6 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
     @Autowired
     public RedisTemplate redisTemplate;
-    @Autowired
-    public StringRedisTemplate stringRedisTemplate;
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
@@ -33,7 +34,7 @@ public class RedisService {
      * @param value 缓存的值
      */
     public <T> void setnxCacheObject(final String key, final T value) {
-        redisTemplate.opsForValue().set(key,value);
+        redisTemplate.opsForValue().setIfAbsent(key, value);
     }
 
     /**
@@ -66,7 +67,7 @@ public class RedisService {
      * @param key
      * @param delta
      */
-    public Long decrementCacheObjectValue(final String key,final long delta){
+    public Long decrementCacheObjectValue(final String key, final long delta){
         return redisTemplate.opsForValue().decrement(key, delta);
     }
 
@@ -306,7 +307,7 @@ public class RedisService {
      * @param hk
      * @param increment
      */
-    public Long incrementCacheMapValue(final String key,final Object hk,  final long increment){
+    public Long incrementCacheMapValue(final String key, final Object hk, final long increment){
         return redisTemplate.opsForHash().increment(key, hk, increment);
     }
 
@@ -318,21 +319,5 @@ public class RedisService {
      */
     public Collection<String> keys(final String pattern) {
         return redisTemplate.keys(pattern);
-    }
-
-    public Object getKey(String key) {
-        return stringRedisTemplate.opsForValue().get(key);
-    }
-
-    public Long incrTimes(String key,long increment) {
-        return stringRedisTemplate.opsForValue().increment(key,increment);
-    }
-
-    public void delKey(String key) {
-        stringRedisTemplate.delete(key);
-    }
-
-    public Long incrKey(String key) {
-        return redisTemplate.opsForValue().increment(key,1);
     }
 }

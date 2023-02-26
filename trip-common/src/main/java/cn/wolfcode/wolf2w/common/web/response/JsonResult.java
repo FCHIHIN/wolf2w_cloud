@@ -45,4 +45,8 @@ public class JsonResult<T> {
     public static JsonResult noLogin() {
         return new JsonResult(CODE_NOLOGIN, MSG_NOLOGIN, null);
     }
+
+    public static JsonResult noPermission() {
+        return new JsonResult(403, "非法访问", null);
+    }
 }

@@ -4,14 +4,15 @@ var vue = new Vue({
         question:{}
     },
     methods:{
+
     },
     mounted:function () {
         var param = getParams();
         var id = param.id;
-
-        //问题明细
-
-
+            ajaxGet("article", "/questions/get", {id}, function (data){
+                console.log(data);
+                vue.question = data.data;
+            })
     }
 });
 

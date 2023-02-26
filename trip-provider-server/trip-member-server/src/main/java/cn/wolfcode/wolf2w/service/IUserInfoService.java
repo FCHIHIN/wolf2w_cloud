@@ -3,6 +3,7 @@ package cn.wolfcode.wolf2w.service;
 import cn.wolfcode.wolf2w.domain.UserInfo;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.util.List;
 import java.util.Map;
 
 public interface IUserInfoService extends IService<UserInfo> {
@@ -17,5 +18,7 @@ public interface IUserInfoService extends IService<UserInfo> {
     Map<String, Object> login(String username, String password);
 
     UserInfo queryByToken(String token);
+
+    List<UserInfo> queryCity(String city);
 }
 

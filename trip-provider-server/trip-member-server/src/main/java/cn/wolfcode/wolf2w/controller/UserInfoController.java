@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 import java.util.Map;
 
 
@@ -29,6 +30,11 @@ public class UserInfoController {
         return JsonResult.success(ret);
     }
 
+    @GetMapping("/detail")
+    public JsonResult<UserInfo> detail(Long id) {
+        return JsonResult.success(userInfoService.getById(id));
+    }
+
     @GetMapping("/sendVerifyCode")
     public JsonResult sendVerifyCode(String phone) {
         userInfoService.sendVerifyCode(phone);
@@ -36,15 +42,15 @@ public class UserInfoController {
     }
 
     @PostMapping("/regist")
-    public JsonResult regist(String nickname,String password,String rpassword,String phone,String verifyCode) {
-        userInfoService.regist(nickname,password,rpassword,phone,verifyCode);
+    public JsonResult regist(String nickname, String password, String rpassword, String phone, String verifyCode) {
+        userInfoService.regist(nickname, password, rpassword, phone, verifyCode);
         return JsonResult.success();
     }
 
     @RequireLogin
     @PostMapping("/login")
-    public JsonResult<Map<String,Object>> login(String username,String password) {
-        Map<String,Object> map = userInfoService.login(username,password);
+    public JsonResult<Map<String, Object>> login(String username, String password) {
+        Map<String, Object> map = userInfoService.login(username, password);
         return JsonResult.success(map);
     }
 
@@ -54,5 +60,15 @@ public class UserInfoController {
         String token = request.getHeader("token");
         UserInfo user = userInfoService.queryByToken(token);
         return JsonResult.success(user);
+    }
+
+    @GetMapping("/list")
+    public JsonResult list() {
+        return JsonResult.success(userInfoService.list());
+    }
+
+    @GetMapping("/queryCity")
+    public JsonResult<List<UserInfo>> queryCity(String city) {
+        return JsonResult.success(userInfoService.queryCity(city));
     }
 }

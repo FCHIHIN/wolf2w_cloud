@@ -10,6 +10,7 @@
   <script type="text/javascript" src="/js/jquery/jquery.js"></script>
   <script src="/js/plugins/js-cookie/js.cookie.min.js"></script>
   <script type="text/javascript" src="/js/vue/common.js"></script>
+  <script src="/js/vue/md5.js"></script>
 </head>
 
 <body style="position: relative;">
@@ -107,27 +108,27 @@
         <div class="q-detail">
           <div class="q-content">
             <div class="q-title">
-              <a href="/wenda/area-10065.html" target="_blank" class="location"><i></i>呼伦贝尔</a>
+              <a href="/wenda/area-10065.html" target="_blank" class="location"><i></i>{{question.destName}}</a>
               <h1>
                 <a href="/wenda/detail-18458675.html">{{question.title}}</a>
               </h1>
             </div>
             <div class="q-desc">
-              在燃烧着”永恒之火"的草原上尽情吃肉在中国的饮食中，有许多食品都是从蒙古族那里传来的，如烤肉、涮羊肉等。似乎大家提到蒙古，都有一个感觉，那就是蒙古实在太爱吃肉了。其实蒙古人的饮食、是分为两个季节的，夏季和冬季。夏季为4月至10月，主要食物是奶制品...
+              {{question.content.content}}
               <div class="area_tags _j_tip_mdd" data-mddid="10065"><a data-cs-p="qa_mdd" class="at_link"
                   href="/travel-scenic-spot/mafengwo/10065.html" target="_blank">北京</a>
                 <div class="at_info" style="display:none;"></div>
               </div>通勤等于取经？上下班到底有多苦？</div>
             <div class="q-info1 clearfix">
               <div class="q-tags fl">
-                <a class="a-tag" href="/wenda/area-10065.html" target="_blank">呼伦贝尔</a>
+                <a class="a-tag" href="/wenda/area-10065.html" target="_blank">{{question.destName}}</a>
               </div>
               <div class="pub-bar fr">
                 <a href="/wenda/u/43303516/answer.html" class="photo" target="_blank"> <img
                     src="http://b1-q.mafengwo.net/s10/M00/43/95/wKgBZ1j3rQGAW3QRAAHbR_tI2xs02.jpeg?imageMogr2%2Fthumbnail%2F%21140x105r%2Fgravity%2FCenter%2Fcrop%2F%21140x105%2Fquality%2F90"
                     width="16" height="16"></a>
                 <a class="name" href="/wenda/u/43303516/answer.html" target="_blank">肉夹馍不会认输</a>
-                <span class="time"><span>2018-05-24 11:04</span></span>
+                <span class="time"><span>{{question.createTime}}</span></span>
               </div>
             </div>
           </div>
@@ -154,8 +155,8 @@
               </div>
             </div>
             <div class="fr">
-              <span class="atten-num">887浏览</span>
-              <span class="atten-num"><span class="_j_same_num">1</span>人关注</span>
+              <span class="atten-num">{{question.viewnum}}浏览</span>
+              <span class="atten-num"><span class="_j_same_num">{{question.sharenum}}</span>人关注</span>
 
               <a class="btn-atten _j_same_question " rel="nofollow" data-status="1"><span>关注</span></a>
 

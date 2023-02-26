@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>49</title>
+    <title>狼行天下</title>
     <link href="/styles/base.css" rel="stylesheet" type="text/css">
     <link href="/styles/index.css" rel="stylesheet" type="text/css">
     <link href="/js/plugins/jqPaginator/jqPagination.css" rel="stylesheet" type="text/css">
@@ -13,7 +13,7 @@
     <script src="/js/plugins/js-cookie/js.cookie.min.js"></script>
     <script type="text/javascript" src="/js/vue/common.js"></script>
     <script type="text/javascript" src="/js/system/index/index.js"></script>
-
+    <script src="/js/vue/vue.min.js"></script>
 </head>
 <body>
 <div id="navbar">
@@ -30,7 +30,7 @@
             <ul class="show-image">
 
                 <li v-if="banners.length" v-for="(b, index) in banners" :class="index==0?'first':''" class="show_image" :data-id="index">
-                    <a :href="'/views/travel/detail.html?id='+b.refId" class="show-pic">
+                    <a :href="'/views/travel/detail.html?id='+b.refid" class="show-pic">
                         <img :src="b.coverUrl">
                     </a>
                     <a href="javascript:;" class="show-title dark">
@@ -157,10 +157,10 @@
                                     <div class="tn-wrapper">
                                         <dl>
                                             <dt>
-                                                <a :href="'/views/travel/detail.html?id='+t.id" target="_blank">{{t.title}}</a>
+                                                <a :href="'/views/travel/detail.html?id='+t.id+'&destId=' + t.destId"  target="_blank">{{t.title}}</a>
                                             </dt>
                                             <dd>
-                                                <a :href="'/views/travel/detail.html?id='+t.id"  target="_blank">
+                                                <a :href="'/views/travel/detail.html?id='+t.id+'&destId=' + t.destId"   target="_blank">
                                                     {{t.summary | subStr}}
                                                 </a>
                                             </dd>
@@ -176,7 +176,7 @@
                                                     {{t.destName}}</a>，by
                                             </span>
                                             <span class="tn-user">
-                                                <a :href="'/views/personal/homepage.html?ownerId='+t.author.id" target="_blank" rel="nofollow">
+                                                <a :href="'/views/personal/homepage.html?userId='+t.author.id" target="_blank" rel="nofollow">
                                                     <img :src="t.author.headImgUrl">
                                                     {{t.author.nickname}}
                                                 </a>
@@ -227,7 +227,7 @@
                 <li>
                     <a href="javascript:;" target="_blank">
                             <span class="image"><img
-                                    src="https://luowowo-demo.oss-cn-shenzhen.aliyuncs.com/wKgIC1xOo6iAS0mlABAmBVFn6AA539.gif"
+                                    src="/images/default//wKgIC1xOo6iAS0mlABAmBVFn6AA539.gif"
                                     height="70" width="100"></span>
                         <div title="最高立减800·上海飞马尔代夫鲁滨逊努努岛7天蜜月自由行（一价全包+私人泳池+儿童吃住优惠+婚纱摄影+可预订奥静/努努岛/中央格兰宁/康迪玛）" class="title">最高立减800·上海飞马尔代夫鲁滨逊努努...</div>
                         <span class="price">¥11880起</span>
@@ -236,7 +236,7 @@
                 <li>
                     <a href="javascript:;" target="_blank">
                             <span class="image"><img
-                                    src="https://luowowo-demo.oss-cn-shenzhen.aliyuncs.com/wKgED1vzqwOAAsFFAAL1lFyHgLg47.jpeg"
+                                    src="/images/default//wKgED1vzqwOAAsFFAAL1lFyHgLg47.jpeg"
                                     height="70" width="100"></span>
                         <div title="【五月美食节】上海出发塞班岛6天5晚自由行(早鸟优惠最高减500元+金卡会员立减500元+赠环岛游+军舰岛+接送机+可升级丛林探险+双重套餐不同选择+含税费1550元+导游小费+中文接送机 )" class="title">【五月美食节】上海出发塞班岛6天5晚自...</div>
                         <span class="price">¥3180起</span>
@@ -245,7 +245,7 @@
                 <li>
                     <a href="javascript:;" target="_blank">
                             <span class="image"><img
-                                    src="https://luowowo-demo.oss-cn-shenzhen.aliyuncs.com/wKgBEFsscoCAVoO2AAOWOCBnxfs33.jpeg"
+                                    src="/images/default//wKgBEFsscoCAVoO2AAOWOCBnxfs33.jpeg"
                                     height="70" width="100"></span>
                         <div title="ins网红拍照圣地·上海直飞美娜多5天自由行(网红无边泳池+布纳肯海龟合照+可考潜水证+深潜教学+追海豚+滑翔伞)" class="title">
                             ins网红拍照圣地·上海直飞美娜多5天自...</div>
@@ -255,7 +255,7 @@
                 <li>
                     <a href="javascript:;" target="_blank">
                             <span class="image"><img
-                                    src="https://luowowo-demo.oss-cn-shenzhen.aliyuncs.com/wKgED1uQ-eOAMAiMAAU0ehvmPqA28.jpeg"
+                                    src="/images/default//wKgED1uQ-eOAMAiMAAU0ehvmPqA28.jpeg"
                                     height="70" width="100"></span>
                         <div title="金卡最高立减500+畅享一价全包·上海往返马尔代夫鲁滨逊努努岛7天5晚自由行（水屋带私人泳池+精彩晚会DJ表演+全天托儿服务+锦鲤免费升级房型/水飞上岛+可订库拉玛提岛/阿玛瑞/波杜希蒂岛/神仙珊瑚岛/奥臻岛/芙花芬岛/莫凡彼岛/尼亚玛/奥静岛）" class="title">金卡最高立减500+畅享一价全包·上海往...</div>
                         <span class="price">¥10680起</span>
@@ -264,7 +264,7 @@
                 <li>
                     <a href="javascript:;" target="_blank">
                             <span class="image"><img
-                                    src="https://luowowo-demo.oss-cn-shenzhen.aliyuncs.com/wKgED1xFn0SAXJ-1AAKOKgZepzM541.png"
+                                    src="/images/default//wKgED1xFn0SAXJ-1AAKOKgZepzM541.png"
                                     height="70" width="100"></span>
                         <div title="北京直飞普吉岛7天自由行（端午/暑期惊喜优惠+最高立减968元+家庭/蜜月同款+屋顶/星光泳池+网红酒店/轻奢别墅任意搭+可定制曼谷/清迈多地连线+赠电话卡/VIP接送机/旅游保险）" class="title">北京直飞普吉岛7天自由行（端午/暑期惊...</div>
                         <span class="price">¥3250起</span>
@@ -287,6 +287,6 @@
     </script>
 </div>
 </body>
-<script src="/js/vue/vue.min.js"></script>
+
 <script src="/js/vue/system/index/index.js"></script>
 </html>

@@ -11,5 +11,25 @@
 
     <artifactId>trip-data-server</artifactId>
 
+    <dependencies>
+
+        <dependency>
+            <groupId>cn.wolfcode</groupId>
+            <artifactId>trip-article-api</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.wolfcode</groupId>
+            <artifactId>trip-common</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba.cloud</groupId>
+            <artifactId>spring-cloud-starter-alibaba-nacos-config</artifactId>
+        </dependency>
+
+
+    </dependencies>
 
 </project>

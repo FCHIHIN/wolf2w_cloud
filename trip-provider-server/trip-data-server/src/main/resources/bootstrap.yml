@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: trip-data-server
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848 #nacos中心地址
+        file-extension: yaml # 配置文件格式
+  profiles:
+    active: dev # 环境标识
+  main:
+    allow-bean-definition-overriding: true  #多个feign接口可以指向同一个微服务

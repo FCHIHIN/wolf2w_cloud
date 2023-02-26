@@ -1,15 +1,17 @@
-package cn.wolfcode.wolf2w.article;
+package cn.wolfcode.wolf2w;
 
-import org.mybatis.spring.annotation.MapperScan;
+
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
-@MapperScan("cn.wolfcode.wolf2w.article.mapper")
+@EnableFeignClients
 @EnableDiscoveryClient
-public class ArticleServe {
+public class SearchServer {
+
     public static void main(String[] args) {
-        SpringApplication.run(ArticleServe.class,args);
+        SpringApplication.run(SearchServer.class, args);
     }
 }

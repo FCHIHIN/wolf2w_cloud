@@ -37,9 +37,9 @@ var vue = new Vue({
         //条件列表
         queryCondition:function (type){
             ajaxGet("article","/strategyConditions/condition", {type:type}, function (data) {
-                if(type == 1){
+                if(type == 2){
                     vue.chinaCondition = data.data;
-                }else if(type == 2){
+                }else if(type == 1){
                     vue.abroadCondition = data.data;
                 }else {
                     vue.themeCondition = data.data;

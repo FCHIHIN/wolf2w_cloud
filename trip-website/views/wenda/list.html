@@ -10,6 +10,7 @@
     <script src="/js/plugins/js-cookie/js.cookie.min.js"></script>
     <script type="text/javascript" src="/js/vue/common.js"></script>
     <script type="text/javascript" src="/js/system/wenda.js"></script>
+    <script src="/js/vue/md5.js"></script>
 </head>
 <body style="position: relative;">
 <div class="topBar">
@@ -103,11 +104,11 @@
 <div class="wrapper wrapper-new">
     <div class="col-main" id="app">
         <div class="newcate-wrap _j_qa_list">
-            <div class="bd newcate-bd">
+            <div class="bd newcate-bd" v-for="question in questions">
                 <ul class="_j_pager_box">
                     <li class="item clearfix _j_question_item" data-qid="793682">
                         <div class="title">
-                            <a href="./detail.html?id=" target="_blank">我要去呼伦贝尔旅行，当地有哪些美食值得去吃？</a> </div>
+                            <a href="./detail.html?id=" target="_blank" >{{question.title}}</a> </div>
                         <div class="container">
                             <div class="avatar"><a href="javascript:;" target="_blank" class="_j_filter_click"><img
                                     class="_j_filter_click"
@@ -122,7 +123,7 @@
                                         src="http://b1-q.mafengwo.net/s10/M00/43/95/wKgBZ1j3rQGAW3QRAAHbR_tI2xs02.jpeg?imageMogr2%2Fthumbnail%2F%21140x105r%2Fgravity%2FCenter%2Fcrop%2F%21140x105%2Fquality%2F90"
                                         width="150" height="100">
                                 <p>
-                                    在燃烧着”永恒之火"的草原上尽情吃肉在中国的饮食中，有许多食品都是从蒙古族那里传来的，如烤肉、涮羊肉等。似乎大家提到蒙古，都有一个感觉，那就是蒙古实在太爱吃肉了。其实蒙古人的饮食、是分为两个季节的，夏季和冬季。夏季为4月至10月，主要食物是奶制品...
+                                    {{question.summary}}
                                 </p>
                             </div>
                             <div class="tags">
@@ -132,14 +133,16 @@
                             <div class="operate">
                                 <div class="zan"><i></i>14285</div>
                                 <div class="mdd"><a href="javascript:;" class="_j_filter_click" target="_blank"><i
-                                        class="_j_filter_click"></i>呼伦贝尔</a></div>
-                                <span class="bar_share">分享 (148)</span>
-                                <span class="reply">回答 (148)</span>
-                                <span class="browse">浏览 (0)</span>
-                                <span class="date">发布于2018-05-24 11:04</span>
+                                        class="_j_filter_click"></i>{{question.destName}}</a></div>
+                                <span class="bar_share">分享 ({{question.sharenum}})</span>
+                                <span class="reply">回答 ({{question.answernum}})</span>
+                                <span class="browse">浏览 ({{question.viewnum}})</span>
+                                <span class="date">发布于{{question.createTime}}</span>
                             </div>
                         </div>
                     </li>
+
+
 
 
 

@@ -26,7 +26,7 @@ public class WebConfig implements WebMvcConfigurer {
     }
 
     //跨域访问
-    @Bean
+/*    @Bean
     public WebMvcConfigurer corsConfigurer() {
         return new WebMvcConfigurer() {
             @Override
@@ -47,5 +47,5 @@ public class WebConfig implements WebMvcConfigurer {
                         .exposedHeaders("Header1", "Header2");
             }
         };
-    }
+    }*/
 }

@@ -24,6 +24,7 @@ import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.plugins.tiff.TIFFField;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -126,7 +127,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         } else if (user.getState() != UserInfo.STATE_NORMAL) {
             throw new LogicException("账号冻结状态");
         }
-        // 拼接冻结缓存
+       /* // 拼接冻结缓存
         else {
             redisService.setnxCacheObject(RedisKeys.FORZEN_PHONE.join(username),0L);
         }
@@ -139,11 +140,12 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         // 错误次数 + 1
         String key = RedisKeys.FORZEN_PHONE.join(username);
         String fiveMinKey = RedisKeys.FORZEN_TIME.join(username);
-        // 次数
-        Integer times = new Integer(String.valueOf(redisService.getKey(key)));
-        System.out.println(times);
+
         // 判断
         if (userInfo == null) {
+            // 次数
+            Integer times = new Integer(String.valueOf(redisService.getKey(key)));
+            System.out.println(times);
         redisService.incrTimes(key,1L);
         if (times == 5) {
             redisService.setnxCacheObject(fiveMinKey,0,RedisKeys.FORZEN_TIME.getTime(),TimeUnit.SECONDS);
@@ -158,7 +160,7 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         }
         throw new LogicException("密码错误");
     }
-
+*/
         // 拼接key
         String token = UUID.randomUUID().toString().replaceAll("-","");
         String keys = RedisKeys.USER_LOGIN_TOKEN.join(token);
@@ -196,6 +198,13 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         }
         return null;
 
+    }
+
+    @Override
+    public List<UserInfo> queryCity(String city) {
+        QueryWrapper<UserInfo> wrapper = new QueryWrapper<>();
+        wrapper.eq("city",city);
+        return super.list(wrapper);
     }
 
 }

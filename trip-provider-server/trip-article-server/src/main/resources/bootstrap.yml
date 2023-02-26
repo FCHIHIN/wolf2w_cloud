@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: trip-article-server
+  cloud:
+    nacos:
+      config:
+        server-addr: 127.0.0.1:8848 #nacos中心地址
+        file-extension: yaml # 配置文件格式
+  profiles:
+    active: dev # 环境标识

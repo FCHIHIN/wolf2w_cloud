@@ -9,6 +9,7 @@ import cn.wolfcode.wolf2w.article.query.RegionQuery;
 import cn.wolfcode.wolf2w.article.service.IDestinationService;
 import cn.wolfcode.wolf2w.article.service.IRegionService;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +83,20 @@ public class DestinationServiceimpl extends ServiceImpl<DestinationMapper, Desti
             destination.setChildren(children);
         }
         return list;
+    }
+
+    @Override
+    public Destination queryByName(String name) {
+        QueryWrapper<Destination> wrapper = new QueryWrapper<>();
+        wrapper.eq("name",name);
+       return super.getOne(wrapper);
+
+    }
+
+    @Override
+    public Destination detail(Long id) {
+        return super.getById(id);
+
+
     }
 }

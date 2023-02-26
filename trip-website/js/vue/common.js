@@ -21,8 +21,8 @@ var serverUrlMap = {
 
 }
 function getServiceUrl(service){
-    return serverUrlMap[service]
-    // return "http://localhost:9000/" + service;
+    // return serverUrlMap[service]
+    return "http://localhost:9000/" + service;
 }
 
 //异步请求
