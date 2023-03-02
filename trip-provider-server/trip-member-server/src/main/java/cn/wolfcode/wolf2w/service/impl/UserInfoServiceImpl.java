@@ -23,10 +23,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 
 import javax.imageio.plugins.tiff.TIFFField;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -207,4 +204,88 @@ public class UserInfoServiceImpl extends ServiceImpl<UserInfoMapper, UserInfo>
         return super.list(wrapper);
     }
 
+    @Override
+    public Map<String, Object> follow(Long userId, Long id) {
+        if (userId == id) {
+            throw new LogicException("不能自己关注自己");
+        }
+
+        // 拼接key
+        boolean flag = false;
+        String key = RedisKeys.USER_FOLLOW.join(id.toString());
+        if (redisService.isCacheSetContains(key,userId)) {
+            // 存在就取消关注
+            redisService.deleteCacheSetValue(key, userId);
+        } else {
+            // 不存在就关注
+            redisService.addCacheSetValue(key, userId);
+            flag = true;
+        }
+        Set<Object> set = redisService.getCacheSet(key);
+        Map<String, Object> map = new HashMap<>();
+        map.put("result",flag);
+        return map;
+    }
+
+    @Override
+    public void statisDataInit() {
+        // 初始化攻略统计hash数据
+        // 查出所有攻略
+        List<UserInfo> list = super.list();
+        for (UserInfo userInfo : list) {
+            this.strategyHashInit(userInfo.getId());
+        }
+        System.out.println("攻略统计初始化成功");
+    }
+
+    @Override
+    public Map<String, Object> getdata(Long userId, Long id) {
+        String key = RedisKeys.USER_FOLLOW.join(id.toString());
+        String ukey = RedisKeys.USER_FOLLOW.join(userId.toString());
+        boolean flag = false;
+        if (redisService.isCacheSetContains(key,userId)) {
+            flag = true;
+        }
+        Set<Object> uset = redisService.getCacheSet(ukey);
+
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("isFollow",flag);
+        map.put("followNum",(uset.size() - 1));
+        return map;
+    }
+
+    @Override
+    public List<UserInfo> follows(Long userId, Long id) {
+        List<UserInfo> list = new ArrayList<>();
+        String key = RedisKeys.USER_FOLLOW.join(userId.toString());
+        Set<Long> set = redisService.getCacheSet(key);
+        Iterator<Long> iterator = set.iterator();
+        while (iterator.hasNext()) {
+            Long uid = iterator.next();
+            UserInfo userInfo = super.getById(uid);
+            if (userInfo != null && list.size() < 4) {
+                list.add(userInfo);
+            }
+        }
+        return list;
+    }
+
+    public String strategyHashInit(Long uid) {
+        UserInfo userInfo = super.getById(uid);
+        //拼接hash key
+        String key = RedisKeys.USER_FOLLOW.join(uid.toString());
+        //判断key是否存在
+        if (!redisService.hasKey(key)) {
+            //不存在-初始化
+            //初始化
+            HashSet<Long> uids = new HashSet<>();
+            uids.add(-1L);
+            redisService.setCacheSet(key, uids);
+        }
+        return key;
+    }
+
 }
+
+
+

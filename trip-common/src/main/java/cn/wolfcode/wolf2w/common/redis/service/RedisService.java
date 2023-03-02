@@ -1,10 +1,7 @@
 package cn.wolfcode.wolf2w.common.redis.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.BoundSetOperations;
-import org.springframework.data.redis.core.HashOperations;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.ValueOperations;
+import org.springframework.data.redis.core.*;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -15,6 +12,8 @@ import java.util.concurrent.TimeUnit;
 public class RedisService {
     @Autowired
     public RedisTemplate redisTemplate;
+    @Autowired
+    public StringRedisTemplate stringRedisTemplate;
 
     /**
      * 缓存基本的对象，Integer、String、实体类等
@@ -308,7 +307,7 @@ public class RedisService {
      * @param increment
      */
     public Long incrementCacheMapValue(final String key, final Object hk, final long increment){
-        return redisTemplate.opsForHash().increment(key, hk, increment);
+        return stringRedisTemplate.opsForHash().increment(key, hk, increment);
     }
 
     /**

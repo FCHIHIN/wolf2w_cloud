@@ -1,5 +1,6 @@
 package cn.wolfcode.wolf2w.data.listener;
 
+import cn.wolfcode.wolf2w.data.feign.IMemberFeignService;
 import cn.wolfcode.wolf2w.data.feign.IStrategyFeignService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
@@ -11,6 +12,8 @@ public class RedisDataInitListener implements ApplicationListener<ContextStarted
     //容器调用refresh方法执行下面逻辑
     @Autowired
     private IStrategyFeignService strategyFeignService;
+    @Autowired
+    private IMemberFeignService memberFeignService;
 
     //spring容器初始化成功后直接调用
     @Override
@@ -19,6 +22,9 @@ public class RedisDataInitListener implements ApplicationListener<ContextStarted
         //1:查询攻略表得到所有攻略数据
         //2:遍历所有攻略， 将攻略统计数据缓存到redis中
         strategyFeignService.statisDataInit();
+        //1:查询所有用户
+        //2:遍历所有用户,将用户关注信息缓存到redis中
+        memberFeignService.statisDataInit();
         System.out.println("---------------攻略统计数hash缓存到redis--end-------------------------");
     }
 }

@@ -53,6 +53,7 @@ public class StrategyServiceImpl extends ServiceImpl<StrategyMapper, Strategy> i
     private StrategyThemecdsMapper strategyThemecdsMapper;
 
 
+
     @Override
     public IPage<Strategy> queryPage(StrategyQuery qo) {
         IPage<Strategy> page = new Page<>(qo.getCurrentPage(), qo.getPageSize());

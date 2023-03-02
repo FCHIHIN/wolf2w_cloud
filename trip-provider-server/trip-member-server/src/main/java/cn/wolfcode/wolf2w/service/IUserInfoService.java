@@ -20,5 +20,13 @@ public interface IUserInfoService extends IService<UserInfo> {
     UserInfo queryByToken(String token);
 
     List<UserInfo> queryCity(String city);
+
+    Map<String, Object>  follow(Long userId, Long id);
+
+    void statisDataInit();
+
+    Map<String, Object> getdata(Long userId, Long id);
+
+    List<UserInfo> follows(Long userId, Long id);
 }
 

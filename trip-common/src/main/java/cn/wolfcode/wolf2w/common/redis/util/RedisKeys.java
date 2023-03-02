@@ -10,6 +10,10 @@ import lombok.Getter;
  */
 @Getter
 public enum RedisKeys {
+    // 关注数统计
+    USER_FOLLOW_HASH("user_follow_hash",-1L),
+    // 用户关注标记key
+    USER_FOLLOW("user_follow",-1L),
     //攻略点赞标记key  实例对象
     STRATEGY_THUMB("strategy_thumb", -1L),  //约定暂时没有设置有效时间
     //用户攻略收藏列表存 key  实例对象

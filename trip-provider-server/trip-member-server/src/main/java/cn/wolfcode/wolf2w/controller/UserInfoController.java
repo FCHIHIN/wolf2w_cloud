@@ -1,11 +1,18 @@
 package cn.wolfcode.wolf2w.controller;
 
+import cn.wolfcode.wolf2w.common.redis.service.RedisService;
+import cn.wolfcode.wolf2w.common.redis.util.RedisKeys;
 import cn.wolfcode.wolf2w.common.security.annotation.RequireLogin;
+import cn.wolfcode.wolf2w.common.security.annotation.UserParam;
 import cn.wolfcode.wolf2w.common.web.response.JsonResult;
 import cn.wolfcode.wolf2w.domain.UserInfo;
 import cn.wolfcode.wolf2w.service.IUserInfoService;
+import com.alibaba.fastjson2.JSON;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import springfox.documentation.spring.web.json.Json;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -17,6 +24,8 @@ import java.util.Map;
 public class UserInfoController {
     @Autowired
     private IUserInfoService userInfoService;
+    @Autowired
+    private RedisService redisService;
 
     @RequireLogin
     @GetMapping("/get/{id}")
@@ -31,8 +40,8 @@ public class UserInfoController {
     }
 
     @GetMapping("/detail")
-    public JsonResult<UserInfo> detail(Long id) {
-        return JsonResult.success(userInfoService.getById(id));
+    public JsonResult<UserInfo> detail(Long userId ) {
+        return JsonResult.success(userInfoService.getById(userId));
     }
 
     @GetMapping("/sendVerifyCode")
@@ -71,4 +80,5 @@ public class UserInfoController {
     public JsonResult<List<UserInfo>> queryCity(String city) {
         return JsonResult.success(userInfoService.queryCity(city));
     }
+
 }
